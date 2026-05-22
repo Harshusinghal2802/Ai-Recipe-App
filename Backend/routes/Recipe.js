@@ -3,7 +3,7 @@ import express from "express";
 import {
   getRecipes,
   createRecipe,
-} from "../controllers/recipe.js";
+} from "../controllers/Recipe.js";
 
 import protect from "../middleware/authMiddleware.js";
 
