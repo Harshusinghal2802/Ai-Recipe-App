@@ -1,12 +1,12 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
+import Login from "./pages/login";
+import Signup from "./pages/signup";
 import Profile from "./pages/Profile";
 import MyProfile from "./pages/MyProfile";
 import Users from "./pages/Users";
 
-import { AuthProvider } from "./context/AuthContext";
+import { AuthProvider } from "./context/authContext";
 
 function App() {
 
