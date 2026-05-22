@@ -7,7 +7,7 @@ import { connectDB } from "./config/db.js";
 
 // ✅ Route Imports
 import user from "./routes/user.js";
-import Recipe from "./routes/recipe.js";
+import Recipe from "./routes/Recipe.js";
 
 // ✅ Load ENV
 dotenv.config();
