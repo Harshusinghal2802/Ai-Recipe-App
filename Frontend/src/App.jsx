@@ -6,7 +6,7 @@ import Profile from "./pages/Profile";
 import MyProfile from "./pages/MyProfile";
 import Users from "./pages/Users";
 
-import { AuthProvider } from "./context/authContext";
+import { AuthProvider } from "./context/authcontext";
 
 function App() {
 
