@@ -1,77 +1,86 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
-const AuthContext = createContext();
+export const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
+const AuthProvider = ({ children }) => {
+  const [userInfo, setUserInfo] = useState(null);
 
-  const [user, setUser] = useState(null);
-
-  const [loading, setLoading] = useState(true);
-
-
+const [favorites, setFavorites] = useState([]);
   useEffect(() => {
+  const user = localStorage.getItem("userInfo");
 
-    const savedUser = localStorage.getItem("user");
+  if (user) {
+    setUserInfo(JSON.parse(user));
+  }
 
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
+  const favs = localStorage.getItem("favorites");
 
-    setLoading(false);
+  if (favs) {
+    setFavorites(JSON.parse(favs));
+  }
+}, []);
 
-  }, []);
-
-
-  // ======================
   // LOGIN
-  // ======================
-  const login = (userData, token) => {
+  const login = (data) => {
+    localStorage.setItem("userInfo", JSON.stringify(data));
 
-    localStorage.setItem(
-      "user",
-      JSON.stringify(userData)
-    );
-
-    localStorage.setItem(
-      "token",
-      token
-    );
-
-    setUser(userData);
+    setUserInfo(data);
   };
+// ADD FAVORITE
+const addFavorite = (recipe) => {
+  const alreadyExists = favorites.find(
+    (item) => item._id === recipe._id
+  );
+
+  if (alreadyExists) return;
+
+  const updatedFavorites = [...favorites, recipe];
+
+  setFavorites(updatedFavorites);
+
+  localStorage.setItem(
+    "favorites",
+    JSON.stringify(updatedFavorites)
+  );
+};
 
 
-  // ======================
+
+
+// REMOVE FAVORITE
+const removeFavorite = (id) => {
+  const updatedFavorites = favorites.filter(
+    (item) => item._id !== id
+  );
+
+  setFavorites(updatedFavorites);
+
+  localStorage.setItem(
+    "favorites",
+    JSON.stringify(updatedFavorites)
+  );
+};
   // LOGOUT
-  // ======================
   const logout = () => {
+    localStorage.removeItem("userInfo");
 
-    localStorage.removeItem("user");
-
-    localStorage.removeItem("token");
-
-    setUser(null);
+    setUserInfo(null);
   };
-
 
   return (
     <AuthContext.Provider
       value={{
-        user,
-        login,
-        logout,
-        loading,
-      }}
+  userInfo,
+  login,
+  logout,
+  favorites,
+  addFavorite,
+  removeFavorite,
+}}
     >
       {children}
     </AuthContext.Provider>
   );
 };
 
-
-// ======================
-// CUSTOM HOOK
-// ======================
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
+export default AuthProvider;

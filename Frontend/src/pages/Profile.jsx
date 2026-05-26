@@ -1,49 +1,98 @@
-import { useNavigate } from "react-router-dom";
+import {
+  useEffect,
+  useState,
+} from "react";
+
+import API from "../api/axios";
+
+import RecipeCard from "../components/RecipeCard";
 
 export default function Profile() {
 
-  const navigate = useNavigate();
+  const [profile,
+    setProfile] =
+    useState(null);
 
-  const user = JSON.parse(localStorage.getItem("user"));
+  useEffect(() => {
 
-  const handleLogout=()=>{
+    fetchProfile();
 
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
+  }, []);
 
-    navigate("/");
-  };
+  const fetchProfile =
+    async () => {
+
+      const res =
+        await API.get(
+          "/profile"
+        );
+
+      setProfile(
+        res.data
+      );
+    };
+
+  if (!profile) {
+    return <p>Loading...</p>;
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-100 to-red-100 flex items-center justify-center p-4">
+    <div className="max-w-6xl mx-auto p-6">
 
-      <div className="bg-white w-full max-w-md rounded-3xl shadow-2xl p-8">
+      <div className="bg-white rounded-2xl shadow p-6 flex flex-col md:flex-row gap-6 items-center">
 
-        <div className="flex flex-col items-center">
+        <img
+          src={
+            profile.user.image
+          }
+          alt=""
+          className="w-32 h-32 rounded-full object-cover"
+        />
 
-          <img
-            src="https://i.pravatar.cc/150"
-            alt=""
-            className="w-28 h-28 rounded-full mb-4 border-4 border-orange-500"
-          />
+        <div>
 
-          <h1 className="text-3xl font-bold text-gray-800">
-            {user?.name}
+          <h1 className="text-3xl font-bold">
+            {
+              profile.user
+                .username
+            }
           </h1>
 
-          <p className="text-gray-500 mt-2">
-            {user?.email}
+          <p className="text-gray-600 mt-2">
+            {
+              profile.user.bio
+            }
           </p>
 
-          <button
-            onClick={handleLogout}
-            className="mt-8 bg-red-500 hover:bg-red-600 text-white px-8 py-3 rounded-xl font-bold transition"
-          >
-            Logout
-          </button>
+        </div>
+
+      </div>
+
+      <div className="mt-10">
+
+        <div className="flex justify-between items-center mb-6">
+
+          <h2 className="text-2xl font-bold">
+            My Recipes
+          </h2>
 
         </div>
+
+        <div className="grid md:grid-cols-3 gap-6">
+
+          {profile.recipes.map(
+            (recipe) => (
+              <RecipeCard
+                key={recipe._id}
+                recipe={recipe}
+              />
+            )
+          )}
+
+        </div>
+
       </div>
+
     </div>
   );
 }

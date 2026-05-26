@@ -7,50 +7,24 @@ const recipeSchema = new mongoose.Schema(
       required: true,
     },
 
-    description: {
+    image: {
       type: String,
       required: true,
     },
 
-    ingredients: [
-      {
-        type: String,
-      },
-    ],
+    ingredients: {
+      type: String,
+      required: true,
+    },
 
     instructions: {
       type: String,
       required: true,
     },
 
-    image: {
-      type: String,
-      default: "",
-    },
-
-    category: {
-      type: String,
-      default: "General",
-    },
-
-    cookingTime: {
-      type: String,
-    },
-
-    difficulty: {
-      type: String,
-      enum: ["Easy", "Medium", "Hard"],
-      default: "Easy",
-    },
-
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-    },
-
-    ratings: {
-      type: Number,
-      default: 0,
     },
   },
   {
@@ -58,9 +32,6 @@ const recipeSchema = new mongoose.Schema(
   }
 );
 
-const Recipe = mongoose.model(
-  "Recipe",
-  recipeSchema
-);
+const Recipe = mongoose.model("Recipe", recipeSchema);
 
 export default Recipe;
